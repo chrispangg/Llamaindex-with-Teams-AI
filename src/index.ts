@@ -11,6 +11,7 @@ import { ChatMessage } from '@llamaindex/core/llms';
 import { Settings } from "llamaindex";
 import env from './env.config';
 import { OpenAI } from "@llamaindex/openai";
+import { MessageActivity } from '@microsoft/teams.api';
 
 Settings.llm = new OpenAI({ model: "gpt-4.1-mini", temperature: 0, apiKey: env.OPENAI_API_KEY });
 
@@ -34,15 +35,16 @@ app.on('message', async ({ stream, send, activity }) => {
     let fullResponse = '';
     let isToolCalling = false;
 
+
     for await (const event of events) {
       // Log all events to see what we're getting
-      console.log("\nEvent received:", JSON.stringify(event, null, 2));
+      // console.log("\nEvent received:", JSON.stringify(event, null, 2));
 
       if (agentStreamEvent.include(event)) {
         // If we're not in the middle of tool calling, stream the response if there is a delta
         if (!isToolCalling && event.data.delta) {
-          fullResponse += event.data.delta;
           stream.emit(event.data.delta);
+          fullResponse += event.data.delta;
         }
       } else {
         // Handle workflow events for tool calls
@@ -72,9 +74,10 @@ app.on('message', async ({ stream, send, activity }) => {
 
             // Send detailed tool call card showing execution results
             const toolCallCard = createToolCallCard(completedToolCall);
+
             await send(toolCallCard);
 
-            console.log(`Tool completed: ${eventData.toolName} = ${completedToolCall.result}`);
+            console.log(`Tool completed: ${eventData.toolName} = ${completedToolCall.result.substring(0, 100)}...`);
 
             // Reset current tool call
             currentToolCall = {};
@@ -83,7 +86,7 @@ app.on('message', async ({ stream, send, activity }) => {
         }
       }
     }
-
+    stream.emit(new MessageActivity().addAiGenerated());
     // Store the conversation after processing all events
     await conversationHistory.put({
       role: 'user',
