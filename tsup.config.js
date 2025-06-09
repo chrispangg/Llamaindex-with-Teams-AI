@@ -2,7 +2,7 @@
 module.exports = {
   dts: true,
   minify: false,
-  bundle: false,
+  bundle: true, // Changed from false to true
   sourcemap: true,
   treeshake: true,
   splitting: true,

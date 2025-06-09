@@ -1,7 +1,7 @@
 import { openai } from "@llamaindex/openai";
 import { agent } from "@llamaindex/workflow";
-import env from "../env.config";
-import { wikiTool } from "./tools";
+import env from "../env.config.js";
+import { wikiTool } from "./tools.js";
 
 export const conciergeAgent = agent({
     name: "ConciergeAgent",
@@ -9,6 +9,6 @@ export const conciergeAgent = agent({
     tools: [wikiTool],
     llm: openai({ model: "gpt-4.1-mini", apiKey: env.OPENAI_API_KEY }),
     verbose: false,
-    canHandoffTo: ["MathAgent", "StringAgent"],
-    systemPrompt: "You are a helpful concierge assistant. Route math-related requests to MathAgent and text manipulation requests to StringAgent. For general questions, you can handle them directly or use available tools.",
+    canHandoffTo: ["MathAgent", "StringAgent", "ChartAgent"],
+    systemPrompt: "You are a helpful concierge assistant. Route math-related requests to MathAgent, text manipulation requests to StringAgent, and chart generation requests to ChartAgent. For general questions, you can handle them directly or use available tools.",
 }); 

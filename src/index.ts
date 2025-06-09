@@ -1,15 +1,15 @@
 import { App } from '@microsoft/teams.apps';
 import { DevtoolsPlugin } from '@microsoft/teams.dev';
-import { agents } from './multi-agent';
+import { agents } from './multi-agent.js';
 import { agentStreamEvent } from '@llamaindex/workflow';
 import {
   createToolCallCard,
   ToolCallData
-} from './cards/tool-call';
-import { getOrCreateConversationHistory } from './chat-history';
+} from './cards/tool-call.js';
+import { getOrCreateConversationHistory } from './chat-history.js';
 import { ChatMessage } from '@llamaindex/core/llms';
 import { Settings } from "llamaindex";
-import env from './env.config';
+import env from './env.config.js';
 import { OpenAI } from "@llamaindex/openai";
 
 Settings.llm = new OpenAI({ model: "gpt-4.1-mini", temperature: 0, apiKey: env.OPENAI_API_KEY });
@@ -95,7 +95,72 @@ app.on('message', async ({ stream, send, activity }) => {
   }
 });
 
+async function runTest() {
+  console.log("--- Starting ChartAgent Test ---");
+  const testPrompt = "Please generate a pie chart with data 10,20,30 and labels Red,Green,Blue";
+  let finalMessage = "";
+  let chartUrl = "";
+
+  try {
+    const events = agents.runStream(testPrompt, { chatHistory: [] });
+    for await (const event of events) {
+      console.log("\nEvent received:", JSON.stringify(event, null, 2));
+
+      if (agentStreamEvent.include(event)) {
+        if (event.data.delta) {
+          finalMessage += event.data.delta;
+        }
+      } else {
+        const eventData = event.data as any;
+        if (eventData.toolName === "generateChart" && eventData.toolOutput) {
+          // The output from our tool is directly the message string
+          chartUrl = eventData.toolOutput.result || eventData.toolOutput;
+          console.log(`Chart Generation Tool Output: ${chartUrl}`);
+        }
+        if (eventData.toolName && eventData.toolOutput && eventData.toolOutput.result) {
+            // If result is an object with a message property (older structure)
+            if (typeof eventData.toolOutput.result === 'object' && eventData.toolOutput.result.message) {
+                 chartUrl = eventData.toolOutput.result.message;
+            } else if (typeof eventData.toolOutput.result === 'string') {
+                // If result is a string (current structure from ChartAgent tool definition)
+                 chartUrl = eventData.toolOutput.result;
+            }
+             console.log(`Tool Output for ${eventData.toolName}: ${chartUrl}`);
+        }
+      }
+    }
+    console.log("\n--- Test Final Message From Agent ---");
+    console.log(finalMessage);
+
+    if (chartUrl.includes("image-charts.com")) {
+      console.log("\n--- Test Succeeded ---");
+      console.log("ChartAgent was likely invoked and returned a chart URL.");
+      console.log("Generated URL (or message containing it):", chartUrl);
+    } else if (finalMessage.includes("image-charts.com")) {
+      console.log("\n--- Test Succeeded (URL in final message) ---");
+      console.log("ChartAgent was likely invoked and returned a chart URL within the final message.");
+      console.log("Final Message:", finalMessage);
+    }
+    else {
+      console.log("\n--- Test Potentially Failed ---");
+      console.log("ChartAgent may not have been invoked or failed to return a valid chart URL.");
+      console.log("Final Message:", finalMessage);
+      console.log("Last captured chartURL variable:", chartUrl);
+    }
+
+  } catch (error) {
+    console.error("Error during test:", error);
+    console.log("\n--- Test Failed (Exception) ---");
+  }
+  console.log("--- ChartAgent Test Finished ---");
+}
+
 (async () => {
-  await app.start(+(process.env.PORT || 3978));
-  console.log('Teams app started with agent integration and adaptive cards');
+  if (process.argv.includes('--test-chart-agent')) {
+    await runTest();
+    process.exit(0); // Exit after test
+  } else {
+    await app.start(+(process.env.PORT || 3978));
+    console.log('Teams app started with agent integration and adaptive cards');
+  }
 })();
