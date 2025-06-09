@@ -3,4 +3,4 @@
  * Exports the ChartAgent.
  */
 
-export { chartAgent } from "./agent.js";
+export { chartAgent } from "./agent";

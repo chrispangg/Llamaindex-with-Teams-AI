@@ -1,7 +1,7 @@
 import { openai } from "@llamaindex/openai";
 import { agent } from "@llamaindex/workflow";
-import env from "../env.config.js";
-import { conciergeAgent } from "../concierge/index.js";
+import env from "../env.config";
+import { conciergeAgent } from "../concierge/index";
 import {
     sumNumbers,
     subtractNumbers,
@@ -10,7 +10,7 @@ import {
     powerNumbers,
     squareRoot,
     modulo
-} from "./tools.js";
+} from "./tools";
 
 export const mathAgent = agent({
     name: "MathAgent",

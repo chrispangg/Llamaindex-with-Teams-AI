@@ -1,7 +1,7 @@
 import { openai } from "@llamaindex/openai";
 import { agent } from "@llamaindex/workflow";
-import env from "../env.config.js";
-import { conciergeAgent } from "../concierge/index.js";
+import env from "../env.config";
+import { conciergeAgent } from "../concierge/index";
 import {
     toUpperCase,
     toLowerCase,
@@ -12,7 +12,7 @@ import {
     replaceText,
     splitString,
     trimWhitespace
-} from "./tools.js";
+} from "./tools";
 
 export const stringAgent = agent({
     name: "StringAgent",

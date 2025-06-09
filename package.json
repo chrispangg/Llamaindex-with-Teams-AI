@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
-  "type": "module",
   "main": "dist/index",
   "types": "dist/index",
   "files": [
@@ -25,7 +24,6 @@
     "@microsoft/teams.common": "preview",
     "@microsoft/teams.dev": "preview",
     "@microsoft/teams.graph": "preview",
-    "image-charts": "^6.1.19",
     "llamaindex": "^0.11.6",
     "zod": "^3.25.51"
   },

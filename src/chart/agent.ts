@@ -4,9 +4,9 @@
 
 import { openai } from "@llamaindex/openai";
 import { agent } from "@llamaindex/workflow"; // This is fine
-import { conciergeAgent } from "../concierge/index.js"; // Corrected path
-import { generateChartTool } from "./tools.js"; // Import the refactored tool
-import env from "../env.config.js";
+import { conciergeAgent } from "../concierge/index"; // Corrected path
+import { generateChartTool } from "./tools"; // Import the refactored tool
+import env from "../env.config";
 
 export const chartAgent = agent({
   name: "ChartAgent",

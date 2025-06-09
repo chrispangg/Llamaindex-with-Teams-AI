@@ -1,15 +1,15 @@
 import { App } from '@microsoft/teams.apps';
 import { DevtoolsPlugin } from '@microsoft/teams.dev';
-import { agents } from './multi-agent.js';
+import { agents } from './multi-agent';
 import { agentStreamEvent } from '@llamaindex/workflow';
 import {
   createToolCallCard,
   ToolCallData
-} from './cards/tool-call.js';
-import { getOrCreateConversationHistory } from './chat-history.js';
+} from './cards/tool-call';
+import { getOrCreateConversationHistory } from './chat-history';
 import { ChatMessage } from '@llamaindex/core/llms';
 import { Settings } from "llamaindex";
-import env from './env.config.js';
+import env from './env.config';
 import { OpenAI } from "@llamaindex/openai";
 
 Settings.llm = new OpenAI({ model: "gpt-4.1-mini", temperature: 0, apiKey: env.OPENAI_API_KEY });
@@ -118,14 +118,14 @@ async function runTest() {
           console.log(`Chart Generation Tool Output: ${chartUrl}`);
         }
         if (eventData.toolName && eventData.toolOutput && eventData.toolOutput.result) {
-            // If result is an object with a message property (older structure)
-            if (typeof eventData.toolOutput.result === 'object' && eventData.toolOutput.result.message) {
-                 chartUrl = eventData.toolOutput.result.message;
-            } else if (typeof eventData.toolOutput.result === 'string') {
-                // If result is a string (current structure from ChartAgent tool definition)
-                 chartUrl = eventData.toolOutput.result;
-            }
-             console.log(`Tool Output for ${eventData.toolName}: ${chartUrl}`);
+          // If result is an object with a message property (older structure)
+          if (typeof eventData.toolOutput.result === 'object' && eventData.toolOutput.result.message) {
+            chartUrl = eventData.toolOutput.result.message;
+          } else if (typeof eventData.toolOutput.result === 'string') {
+            // If result is a string (current structure from ChartAgent tool definition)
+            chartUrl = eventData.toolOutput.result;
+          }
+          console.log(`Tool Output for ${eventData.toolName}: ${chartUrl}`);
         }
       }
     }
