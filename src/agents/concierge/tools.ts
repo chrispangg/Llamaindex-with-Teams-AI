@@ -1,3 +1,4 @@
-import { wiki } from "@llamaindex/tools";
+import { wiki, weather } from "@llamaindex/tools";
 
-export const wikiTool = wiki(); 
+export const wikiTool = wiki();
+export const weatherTool = weather();
