@@ -1,6 +1,9 @@
-# Teams AI Demo
+# Teams AI + Llamaindex Template 
 
-A Microsoft Teams bot application that demonstrates multi-agent AI capabilities using Teams AI v2 and LlamaIndex workflows. The bot features specialized agents for mathematical calculations, text manipulation, and general assistance, all integrated with Microsoft Teams through adaptive cards and streaming responses.
+![Example screenshot of the bot in action](assets/example-screenshot.png)
+
+
+A template for Microsoft Teams bot application that demonstrates multi-agent AI capabilities using Teams AI v2 and LlamaIndex workflows. The bot features specialized agents for mathematical calculations, text manipulation, and general assistance, all integrated with Microsoft Teams through adaptive cards and streaming responses.
 
 ## Features
 
@@ -100,27 +103,6 @@ Start the development server:
 bun run dev
 ```
 
-The application will start on port 3978 (or the port specified in your environment variables).
-
-### Building for Production
-
-Build the application:
-```bash
-bun run build
-```
-
-Start the production server:
-```bash
-bun start
-```
-
-### Available Scripts
-
-- `bun run dev` - Start development server with hot reload
-- `bun run build` - Build the application for production
-- `bun run start` - Start the production server
-- `bun run clean` - Clean the build directory
-
 ## Usage
 
 ### Mathematical Operations
@@ -136,12 +118,6 @@ Request text processing operations:
 - "Convert 'hello world' to uppercase"
 - "What's the length of 'TypeScript'?"
 - "Reverse the string 'programming'"
-
-### General Queries
-
-The concierge agent can handle general questions and has access to Wikipedia:
-- "Tell me about artificial intelligence"
-- "What is Microsoft Teams?"
 
 ## Technology Stack
 
