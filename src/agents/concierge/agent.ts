@@ -1,6 +1,6 @@
 import { openai } from "@llamaindex/openai";
 import { agent } from "@llamaindex/workflow";
-import env from "../env.config";
+import env from "../../env.config";
 import { wikiTool } from "./tools";
 
 export const conciergeAgent = agent({
